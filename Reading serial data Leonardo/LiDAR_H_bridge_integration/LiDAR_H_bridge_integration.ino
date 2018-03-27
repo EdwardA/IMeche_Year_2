@@ -1,6 +1,6 @@
 const int in1 = 3;
 const int in2 = 5;
-const int in3 = 13;
+const int in3 = 10;
 const int in4 = 11;
 String incoming;
 int incoming_int;

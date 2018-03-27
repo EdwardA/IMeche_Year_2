@@ -1,8 +1,7 @@
 unsigned char dta[100];
 unsigned char len = 0;
 
-void setup()
-{
+void setup() {
     Serial1.begin(115200);
     Serial.begin(115200);
 }

@@ -14,11 +14,11 @@ void setup() {
 void loop() {
   if (Serial.available() > 0){
     incoming = Serial.readString();
-    Serial.print("I recived: ");
-    Serial.println(incoming);
+    //Serial.print("I recived: ");
+    //Serial.println(incoming);
     incoming_int = incoming.toInt();
-    Serial.print("as an int: ");
-    Serial.println(incoming_int);
+    //Serial.print("as an int: ");
+    //Serial.println(incoming_int);
     if (incoming_int > 0){
       mapped = map(incoming_int, 0, 10, 0, 255);
       analogWrite(in1, mapped);
