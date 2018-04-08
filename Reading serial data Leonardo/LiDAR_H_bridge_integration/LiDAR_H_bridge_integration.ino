@@ -30,7 +30,7 @@ void loop() {
 
             t2 <<= 8;
             t2 += t1;
-            Serial.println(t2);
+            //Serial.println(t2);
             //Serial.print('\t');
 
             t1 = Serial1.read(); //Byte5
@@ -49,24 +49,24 @@ void loop() {
     
   //if (Serial.available() > 0){
     incoming = t2;
-    Serial.print("I recived: ");
-    Serial.println(incoming);
+    //Serial.print("I recived: ");
+    //Serial.println(incoming);
     incoming_int = incoming.toInt();
     Serial.print("as an int: ");
     Serial.println(incoming_int);
-    if (incoming_int > 0){
-      mapped = map(incoming_int, 0, 1000, 0, 255);
-      analogWrite(in1, mapped);
-      digitalWrite(in2, LOW);
+    //if (incoming_int > 0){
+     // mapped = map(incoming_int, 0, 1000, 0, 255);
+      //analogWrite(in1, mapped);
+      //digitalWrite(in2, LOW);
       
-    }else if (incoming_int < 0 ){
-      mapped = map(incoming_int, 0, -1000, 0, 255);
-      digitalWrite(in1, LOW);
-      analogWrite(in2, mapped);
-    }else{
-      digitalWrite(in1, HIGH);
-      digitalWrite(in2, HIGH);
-    }
+    }//else if (incoming_int < 0 ){
+      //mapped = map(incoming_int, 0, -1000, 0, 255);
+     // digitalWrite(in1, LOW);
+      //analogWrite(in2, mapped);
+   // }else{
+      //digitalWrite(in1, HIGH);
+      //digitalWrite(in2, HIGH);
+   // }
 
     
   //}
