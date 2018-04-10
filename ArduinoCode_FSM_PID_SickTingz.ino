@@ -29,10 +29,18 @@ const int INPUT3 = 10;   //Motor B direction 1
 const int INPUT4 = 11;   //Motor B direction 2
 const int ENABLEB = 12; //Motor B enable (enabled when high)
 
+//sensor read
+unsigned char dta[100];
+unsigned char len = 0;
+unsigned int t1;
+unsigned int distance;
+
+
 //PID Setup
 int Setpoint = 0;
 double Kp=20, Ki=5, Kd=10;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+
 
 //=== \/ setUp \/ ===============================
 
@@ -110,6 +118,22 @@ void loop() {
       state = 2;
     }
   }
+//======= \/ sensor read and manipulate (feel free to move if needed) \/ =======
+while(Serial1.available()>=9)
+    {
+        if((0x59 == Serial1.read()) && (0x59 == Serial1.read())) //Byte1 & Byte2
+        {
+            t1 = Serial1.read(); //Byte3
+            distance = Serial1.read(); //Byte4
+
+            distance <<= 8;
+            distance += t1;
+            //Serial.println(distance);
+        }
+    }
+    Serial.println(distance);
+
+  
 }
 
 //=== /\ stateMachine /\ =======================
@@ -123,9 +147,41 @@ void movement() {
       do not worry about stopping conditions here (see movementComplete())
   */
 
-  Input = analogRead(PIN_INPUT);
+  Input = analogRead(distance);
   myPID.Compute();
-  analogWrite(PIN_OUTPUT, Output);
+  Serial.println(Output);
+  if (Output > 0){
+//======Drives forward==========
+    digitalWrite(ENABLEA, HIGH);//enables motor A
+    digitalWrite(ENABLEB, HIGH);//enables motor B
+    
+    analogWrite(INPUT1, Output); //Drives motor A forward at rate of Output
+    digitalWrite(INPUT2, LOW);
+
+    analogWrite(INPUT3, Output); //Drives motor B forward at rate of Output
+    digitalWrite(INPUT4, LOW);
+    else if(Output < 0){
+//======Drives backwards==========
+      digitalWrite(ENABLEA, HIGH);//enables motor A
+      digitalWrite(ENABLEB, HIGH);//enables motor B
+      
+      digitalWrite(INPUT1, LOW);
+      analogWrite(INPUT2, abs Output); //Drives motor A backwards at rate of Output
+
+      digitalWrite(INPUT3, LOW);
+      analogWrite(INPUT4, abs Output); //Drives motor B forward at rate of Output
+    }else{
+//==============Brakes============
+    digitalWrite(ENABLEA, HIGH);//enables motor A
+    digitalWrite(ENABLEB, HIGH);//enables motor B
+    
+    analogWrite(INPUT1, HIGH); //drives wheels in both directions
+    digitalWrite(INPUT2, HIGH);//drives wheels in both directions
+
+    analogWrite(INPUT3, HIGH); //drives wheels in both directions
+    digitalWrite(INPUT4, HIGH);//drives wheels in both directions
+    }
+  }
 
   /*
    * Setup for the movement function. compare to the PID_Basic example sketch if you want to call other functions within the functions sketch 
